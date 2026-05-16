@@ -1,0 +1,188 @@
+/* ===== Базовые переменные ===== */
+:root {
+    --brand-primary: #2563eb;       /* насыщенный синий */
+    --brand-secondary: #7c3aed;     /* фиолетовый */
+    --brand-accent: #0ea5e9;        /* голубой */
+    --bg-soft: #f1f5f9;             /* светло-серый фон */
+    --text-muted: #64748b;
+    --card-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    --card-shadow-hover: 0 12px 28px rgba(15, 23, 42, 0.16);
+}
+
+/* ===== Глобальное ===== */
+body {
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-soft);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+main {
+    flex: 1;
+}
+
+/* ===== Шапка ===== */
+.app-header {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    color: #fff;
+    padding: 1.25rem 0;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.app-header .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.app-header .navbar-brand:hover {
+    opacity: 0.85;
+}
+
+.app-header .logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.app-header .logo img {
+    width: 36px;
+    height: 36px;
+}
+
+.app-header h1 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.app-header .subtitle {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* ===== Hero ===== */
+.hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+}
+
+.hero h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+}
+
+.hero p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+/* ===== Карточки функций ===== */
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.feature-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem;
+    text-decoration: none;
+    color: #0f172a;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+    color: #0f172a;
+}
+
+.feature-card .icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: #fff;
+}
+
+.feature-card.persons .icon-wrap {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-accent));
+}
+
+.feature-card.roles .icon-wrap {
+    background: linear-gradient(135deg, var(--brand-secondary), #ec4899);
+}
+
+.feature-card h3 {
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+    flex: 1;
+}
+
+.feature-card .cta {
+    color: var(--brand-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+}
+
+.feature-card:hover .cta i {
+    transform: translateX(3px);
+    transition: transform 0.2s;
+}
+
+/* ===== Подвал ===== */
+.app-footer {
+    background: #1e293b;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 1.25rem 0;
+    font-size: 0.875rem;
+    margin-top: 3rem;
+}
+
+.app-footer a {
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+.app-footer a:hover {
+    color: #fff;
+}

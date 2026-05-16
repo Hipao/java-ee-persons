@@ -4,40 +4,44 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<!-- Настройка viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- Bootstrap CSS -->
+
 <link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/bootstrap-icons.min.css">
+<link rel="stylesheet" href="css/style.css">
 
 <title>Управление персоналом</title>
-
 </head>
 <body>
 
-    <div class="container-fluid">
-        <jsp:include page="/views/header.jsp" />
+    <jsp:include page="/views/header.jsp" />
 
-        <div class="container">
+    <main class="container">
+        <section class="hero">
+            <h2>Управление персоналом</h2>
+            <p>Информационная система учёта сотрудников и должностей предприятия</p>
+        </section>
 
-            <br><br><br>
+        <section class="feature-grid">
+            <a href="#" class="feature-card persons">
+                <div class="icon-wrap"><i class="bi bi-people-fill"></i></div>
+                <h3>Сотрудники</h3>
+                <p>Реестр работников предприятия: ФИО, контактные данные, должность, дата приёма.</p>
+                <span class="cta">Перейти к разделу <i class="bi bi-arrow-right"></i></span>
+            </a>
 
-            <div class="list-group text-center py-3 px-3">
-                <h2>Функции системы</h2>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item list-group-item-primary"><a href="#">Сотрудники</a></li>
-                    <li class="list-group-item list-group-item-info"><a href="#">Должности</a></li>
-                </ul>
-            </div>
+            <a href="#" class="feature-card roles">
+                <div class="icon-wrap"><i class="bi bi-briefcase-fill"></i></div>
+                <h3>Должности</h3>
+                <p>Справочник должностей с указанием оклада и подчинённости.</p>
+                <span class="cta">Перейти к разделу <i class="bi bi-arrow-right"></i></span>
+            </a>
+        </section>
+    </main>
 
-            <br><br>
-        </div>
+    <jsp:include page="/views/footer.jsp" />
 
-        <jsp:include page="/views/footer.jsp" />
-    </div>
-
-    <!-- jQuery -->
     <script src="js/jquery-3.6.4.js"></script>
-    <!-- Bootstrap JS + Popper JS -->
     <script defer src="js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
