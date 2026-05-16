@@ -23,14 +23,14 @@
         </section>
 
         <section class="feature-grid">
-            <a href="#" class="feature-card persons">
+            <a href="HelloPersonsServlet" class="feature-card persons">
                 <div class="icon-wrap"><i class="bi bi-people-fill"></i></div>
                 <h3>Сотрудники</h3>
                 <p>Реестр работников предприятия: ФИО, контактные данные, должность, дата приёма.</p>
                 <span class="cta">Перейти к разделу <i class="bi bi-arrow-right"></i></span>
             </a>
 
-            <a href="#" class="feature-card roles">
+            <a href="HelloRoleServlet" class="feature-card roles">
                 <div class="icon-wrap"><i class="bi bi-briefcase-fill"></i></div>
                 <h3>Должности</h3>
                 <p>Справочник должностей с указанием оклада и подчинённости.</p>
