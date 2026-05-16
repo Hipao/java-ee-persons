@@ -1,16 +1,21 @@
 package controller;
 
+import domain.Person;
+import domain.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Сервлет-каркас для раздела «Сотрудники».
- * Лабораторная работа № 2 — Создание шаблонов сервлетов.
+ * Сервлет раздела «Сотрудники».
+ * Лабораторные работы № 2 и № 3.
  *
  * @author Демидко М. Д., группа ПИZ-331
  */
@@ -18,6 +23,29 @@ import java.io.PrintWriter;
 public class PersonsServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+
+    /** Демо-набор сотрудников для проверки доменных классов Role и Person (ЛР_3). */
+    private static final List<Person> DEMO_PERSONS;
+
+    static {
+        Role director = new Role(1L, "Директор");
+        Role engineer = new Role(2L, "Главный инженер");
+        Role developer = new Role(3L, "Программист");
+        Role accountant = new Role(4L, "Бухгалтер");
+
+        DEMO_PERSONS = Arrays.asList(
+                new Person(1L, "Иван", "Петров", "+7 (900) 123-45-67", "ivan.petrov@example.com",
+                        director.getId(), director),
+                new Person(2L, "Мария", "Сидорова", "+7 (900) 234-56-78", "maria.s@example.com",
+                        engineer.getId(), engineer),
+                new Person(3L, "Алексей", "Иванов", "+7 (900) 345-67-89", "a.ivanov@example.com",
+                        developer.getId(), developer),
+                new Person(4L, "Елена", "Кузнецова", "+7 (900) 456-78-90", "e.kuznetsova@example.com",
+                        developer.getId(), developer),
+                new Person(5L, "Дмитрий", "Смирнов", "+7 (900) 567-89-01", "d.smirnov@example.com",
+                        accountant.getId(), accountant)
+        );
+    }
 
     public PersonsServlet() {
         super();
@@ -28,44 +56,59 @@ public class PersonsServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html; charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
-        try (PrintWriter writer = response.getWriter()) {
-            writer.println("<!DOCTYPE html>");
-            writer.println("<html lang=\"ru\">");
-            writer.println("<head>");
-            writer.println("    <meta charset=\"UTF-8\">");
-            writer.println("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
-            writer.println("    <link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/css/bootstrap.min.css\">");
-            writer.println("    <link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/css/bootstrap-icons.min.css\">");
-            writer.println("    <link rel=\"stylesheet\" href=\"" + request.getContextPath() + "/css/style.css\">");
-            writer.println("    <title>Сотрудники · Управление персоналом</title>");
-            writer.println("</head>");
-            writer.println("<body>");
-            writer.println("    <header class=\"app-header\">");
-            writer.println("        <div class=\"container\">");
-            writer.println("            <a href=\"" + request.getContextPath() + "/\" class=\"navbar-brand\">");
-            writer.println("                <div class=\"logo\"><img src=\"" + request.getContextPath() + "/images/persons.png\" alt=\"Логотип\"></div>");
-            writer.println("                <div><h1>Управление персоналом</h1>");
-            writer.println("                <p class=\"subtitle\">Java EE · Веб-приложение</p></div>");
-            writer.println("            </a>");
-            writer.println("        </div>");
-            writer.println("    </header>");
-            writer.println("    <main class=\"container\">");
-            writer.println("        <section class=\"hero\">");
-            writer.println("            <h2><i class=\"bi bi-people-fill text-primary\"></i> Сотрудники</h2>");
-            writer.println("            <p>Привет от сервлета <code>PersonsServlet</code>. Здесь будет реализован реестр сотрудников.</p>");
-            writer.println("        </section>");
-            writer.println("        <div class=\"text-center mt-4\">");
-            writer.println("            <a href=\"" + request.getContextPath() + "/\" class=\"btn btn-outline-primary\">");
-            writer.println("                <i class=\"bi bi-arrow-left\"></i> На главную</a>");
-            writer.println("        </div>");
-            writer.println("    </main>");
-            writer.println("    <footer class=\"app-footer\">");
-            writer.println("        <div class=\"container\">");
-            writer.println("            <div>© 2026 · Демидко М. Д. · группа ПИZ-331 · РГЭУ (РИНХ)</div>");
-            writer.println("        </div>");
-            writer.println("    </footer>");
-            writer.println("</body>");
-            writer.println("</html>");
+        String ctx = request.getContextPath();
+
+        try (PrintWriter w = response.getWriter()) {
+            w.println("<!DOCTYPE html>");
+            w.println("<html lang=\"ru\"><head>");
+            w.println("<meta charset=\"UTF-8\">");
+            w.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+            w.println("<link rel=\"stylesheet\" href=\"" + ctx + "/css/bootstrap.min.css\">");
+            w.println("<link rel=\"stylesheet\" href=\"" + ctx + "/css/bootstrap-icons.min.css\">");
+            w.println("<link rel=\"stylesheet\" href=\"" + ctx + "/css/style.css\">");
+            w.println("<title>Сотрудники · Управление персоналом</title>");
+            w.println("</head><body>");
+
+            w.println("<header class=\"app-header\"><div class=\"container\">");
+            w.println("<a href=\"" + ctx + "/\" class=\"navbar-brand\">");
+            w.println("<div class=\"logo\"><img src=\"" + ctx + "/images/persons.png\" alt=\"Логотип\"></div>");
+            w.println("<div><h1>Управление персоналом</h1>");
+            w.println("<p class=\"subtitle\">Java EE · Веб-приложение</p></div></a>");
+            w.println("</div></header>");
+
+            w.println("<main class=\"container\">");
+            w.println("<section class=\"hero\">");
+            w.println("<h2><i class=\"bi bi-people-fill text-primary\"></i> Сотрудники</h2>");
+            w.println("<p>Демонстрация работы классов <code>domain.Person</code> и <code>domain.Role</code> (ЛР_3).</p>");
+            w.println("</section>");
+
+            w.println("<div class=\"table-responsive shadow-sm rounded-3 bg-white p-3\">");
+            w.println("<table class=\"table table-hover align-middle mb-0\">");
+            w.println("<thead><tr><th>#</th><th>ID</th><th>ФИО</th><th>Должность</th><th>Телефон</th><th>Email</th></tr></thead>");
+            w.println("<tbody>");
+            int n = 1;
+            for (Person person : DEMO_PERSONS) {
+                w.println("<tr>");
+                w.println("<td>" + (n++) + "</td>");
+                w.println("<td>" + person.getId() + "</td>");
+                w.println("<td>" + person.getFullName() + "</td>");
+                w.println("<td><span class=\"badge bg-secondary\">" + person.getRole() + "</span></td>");
+                w.println("<td>" + person.getPhone() + "</td>");
+                w.println("<td><a href=\"mailto:" + person.getEmail() + "\">" + person.getEmail() + "</a></td>");
+                w.println("</tr>");
+            }
+            w.println("</tbody></table></div>");
+
+            w.println("<div class=\"text-center mt-4\">");
+            w.println("<a href=\"" + ctx + "/\" class=\"btn btn-outline-primary\">");
+            w.println("<i class=\"bi bi-arrow-left\"></i> На главную</a></div>");
+            w.println("</main>");
+
+            w.println("<footer class=\"app-footer\"><div class=\"container\">");
+            w.println("<div>© 2026 · Демидко М. Д. · группа ПИZ-331 · РГЭУ (РИНХ)</div>");
+            w.println("</div></footer>");
+
+            w.println("</body></html>");
         }
     }
 
