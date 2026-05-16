@@ -17,7 +17,8 @@ import java.util.List;
 
 /**
  * Контроллер раздела «Сотрудники» (MVC).
- * Берёт данные из БД через {@link PersonDbDAO} и форвардит на /views/person.jsp.
+ * GET — список сотрудников из БД.
+ * POST — создание нового сотрудника (ЛР_6).
  *
  * @author Демидко М. Д., группа ПИZ-331
  */
@@ -51,7 +52,36 @@ public class PersonsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Обработка POST формы реализована в ЛР_6
-        doGet(request, response);
+        request.setCharacterEncoding("UTF-8");
+
+        String firstName = request.getParameter("firstname");
+        String lastName = request.getParameter("lastname");
+        String idRoleStr = request.getParameter("idRole");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+
+        if (firstName == null || firstName.isBlank()
+                || lastName == null || lastName.isBlank()
+                || idRoleStr == null || idRoleStr.isBlank()) {
+            request.setAttribute("error", "Заполните обязательные поля: фамилия, имя, должность");
+            doGet(request, response);
+            return;
+        }
+
+        try {
+            Long idRole = Long.valueOf(idRoleStr);
+            Role role = roleDao.findById(idRole);
+            Person person = new Person(firstName.trim(), lastName.trim(),
+                    phone != null ? phone.trim() : null,
+                    email != null ? email.trim() : null,
+                    idRole, role);
+            personDao.insert(person);
+        } catch (DAOException | NumberFormatException e) {
+            getServletContext().log("PersonsServlet.insert failed", e);
+            request.setAttribute("error", "Не удалось добавить сотрудника: " + e.getMessage());
+            doGet(request, response);
+            return;
+        }
+        response.sendRedirect(request.getContextPath() + "/person");
     }
 }

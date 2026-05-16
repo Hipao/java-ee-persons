@@ -15,7 +15,8 @@ import java.util.List;
 
 /**
  * Контроллер раздела «Должности» (MVC).
- * Берёт данные из БД через {@link RoleDbDAO} и форвардит на /views/role.jsp.
+ * GET — список должностей из БД.
+ * POST — создание новой должности (ЛР_6).
  *
  * @author Демидко М. Д., группа ПИZ-331
  */
@@ -44,7 +45,19 @@ public class RoleServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Обработка POST формы реализована в ЛР_6
-        doGet(request, response);
+        request.setCharacterEncoding("UTF-8");
+        String namerole = request.getParameter("namerole");
+        if (namerole != null && !namerole.isBlank()) {
+            try {
+                dao.insert(new Role(namerole.trim()));
+            } catch (DAOException e) {
+                getServletContext().log("RoleServlet.insert failed", e);
+                request.setAttribute("error", "Не удалось добавить должность: " + e.getMessage());
+                doGet(request, response);
+                return;
+            }
+        }
+        // PRG-pattern: redirect после POST, чтобы F5 не повторял INSERT
+        response.sendRedirect(request.getContextPath() + "/role");
     }
 }
