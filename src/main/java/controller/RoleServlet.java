@@ -15,8 +15,10 @@ import java.util.List;
 
 /**
  * Контроллер раздела «Должности» (MVC).
- * GET — список должностей из БД.
- * POST — создание новой должности (ЛР_6).
+ * GET без параметров — список + форма добавления.
+ * GET ?action=edit&id=X — режим редактирования (форма заполнена).
+ * GET ?action=delete&id=X — удаление + redirect.
+ * POST — INSERT (если id пустой) или UPDATE (если id есть).
  *
  * @author Демидко М. Д., группа ПИZ-331
  */
@@ -30,6 +32,66 @@ public class RoleServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String idStr = request.getParameter("id");
+
+        if ("delete".equals(action) && idStr != null) {
+            try {
+                dao.delete(Long.valueOf(idStr));
+            } catch (DAOException | NumberFormatException e) {
+                getServletContext().log("RoleServlet.delete failed", e);
+                request.setAttribute("error", "Не удалось удалить должность: " + e.getMessage());
+            }
+            response.sendRedirect(request.getContextPath() + "/role");
+            return;
+        }
+
+        if ("edit".equals(action) && idStr != null) {
+            try {
+                Role editRole = dao.findById(Long.valueOf(idStr));
+                request.setAttribute("editRole", editRole);
+            } catch (DAOException | NumberFormatException e) {
+                getServletContext().log("RoleServlet.findById failed", e);
+                request.setAttribute("error", "Не удалось загрузить должность: " + e.getMessage());
+            }
+        }
+
+        renderList(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        String idStr = request.getParameter("id");
+        String namerole = request.getParameter("namerole");
+
+        if (namerole == null || namerole.isBlank()) {
+            request.setAttribute("error", "Введите наименование должности");
+            renderList(request, response);
+            return;
+        }
+
+        try {
+            if (idStr != null && !idStr.isBlank()) {
+                // UPDATE
+                Role role = new Role(Long.valueOf(idStr), namerole.trim());
+                dao.update(role);
+            } else {
+                // INSERT
+                dao.insert(new Role(namerole.trim()));
+            }
+        } catch (DAOException | NumberFormatException e) {
+            getServletContext().log("RoleServlet.save failed", e);
+            request.setAttribute("error", "Не удалось сохранить должность: " + e.getMessage());
+            renderList(request, response);
+            return;
+        }
+        response.sendRedirect(request.getContextPath() + "/role");
+    }
+
+    private void renderList(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         List<Role> roles;
         try {
             roles = dao.findAll();
@@ -40,24 +102,5 @@ public class RoleServlet extends HttpServlet {
         }
         request.setAttribute("roles", roles);
         request.getRequestDispatcher("/views/role.jsp").forward(request, response);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        String namerole = request.getParameter("namerole");
-        if (namerole != null && !namerole.isBlank()) {
-            try {
-                dao.insert(new Role(namerole.trim()));
-            } catch (DAOException e) {
-                getServletContext().log("RoleServlet.insert failed", e);
-                request.setAttribute("error", "Не удалось добавить должность: " + e.getMessage());
-                doGet(request, response);
-                return;
-            }
-        }
-        // PRG-pattern: redirect после POST, чтобы F5 не повторял INSERT
-        response.sendRedirect(request.getContextPath() + "/role");
     }
 }

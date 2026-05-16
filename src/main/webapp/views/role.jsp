@@ -21,6 +21,10 @@
         <p>Справочник должностей предприятия с возможностью добавления, редактирования и удаления.</p>
     </section>
 
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
+
     <div class="row g-4">
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
@@ -33,7 +37,7 @@
                             <tr>
                                 <th scope="col" style="width: 60px;">Код</th>
                                 <th scope="col">Наименование</th>
-                                <th scope="col" class="text-center" style="width: 100px;">Действия</th>
+                                <th scope="col" class="text-center" style="width: 110px;">Действия</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,10 +46,14 @@
                                     <td>${role.id}</td>
                                     <td>${role.namerole}</td>
                                     <td class="text-center">
-                                        <a href="#" class="btn btn-sm btn-outline-primary me-1" title="Редактировать">
+                                        <a href="${pageContext.request.contextPath}/role?action=edit&id=${role.id}"
+                                           class="btn btn-sm btn-outline-primary me-1" title="Редактировать">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="#" class="btn btn-sm btn-outline-danger" title="Удалить">
+                                        <a href="${pageContext.request.contextPath}/role?action=delete&id=${role.id}"
+                                           class="btn btn-sm btn-outline-danger"
+                                           title="Удалить"
+                                           onclick="return confirm('Удалить должность «${role.namerole}»?');">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -63,17 +71,41 @@
         <div class="col-lg-4">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 pt-3">
-                    <h3 class="h5 mb-0"><i class="bi bi-plus-circle me-2"></i>Новая должность</h3>
+                    <h3 class="h5 mb-0">
+                        <c:choose>
+                            <c:when test="${not empty editRole}">
+                                <i class="bi bi-pencil-square me-2"></i>Редактирование должности
+                            </c:when>
+                            <c:otherwise>
+                                <i class="bi bi-plus-circle me-2"></i>Новая должность
+                            </c:otherwise>
+                        </c:choose>
+                    </h3>
                 </div>
                 <div class="card-body">
                     <form method="POST" action="${pageContext.request.contextPath}/role">
+                        <c:if test="${not empty editRole}">
+                            <input type="hidden" name="id" value="${editRole.id}">
+                        </c:if>
                         <div class="mb-3">
                             <label for="inputRole" class="form-label">Наименование</label>
-                            <input type="text" name="namerole" class="form-control" id="inputRole" required>
+                            <input type="text" name="namerole" class="form-control"
+                                   id="inputRole" required
+                                   value="${not empty editRole ? editRole.namerole : ''}">
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-plus-lg me-1"></i> Добавить
+                            <c:choose>
+                                <c:when test="${not empty editRole}">
+                                    <i class="bi bi-save me-1"></i> Сохранить изменения
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="bi bi-plus-lg me-1"></i> Добавить
+                                </c:otherwise>
+                            </c:choose>
                         </button>
+                        <c:if test="${not empty editRole}">
+                            <a href="${pageContext.request.contextPath}/role" class="btn btn-link w-100 mt-2">Отмена</a>
+                        </c:if>
                     </form>
                 </div>
             </div>
