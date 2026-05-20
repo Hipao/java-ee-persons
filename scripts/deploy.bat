@@ -4,7 +4,7 @@ title Java EE - Deploy
 
 set TOMCAT_HOME=D:\dev\apache-tomcat-10.0.27
 set TOMCAT_WEBAPPS=%TOMCAT_HOME%\webapps
-set PROJECT_DIR=D:\work\java-ee-labs\persons
+set PROJECT_DIR=%~dp0persons
 set PROJECT_SRC=%PROJECT_DIR%\src\main\webapp
 set JAVA_SRC=%PROJECT_DIR%\src\main\java
 set CLASSES=%PROJECT_DIR%\build\classes
